@@ -3,7 +3,6 @@ import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 
 export const database: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -16,9 +15,8 @@ export const database: TypeOrmModuleAsyncOptions = {
       port: 3306,
       username: 'root',
       password: '',
-      database: 'carfusion',
+      database: 'chatapp',
       entities: [__dirname + './../../models/**/*.entity{.ts,.js}'],
-      // ''
       synchronize: true,
       logging: true,
     };
