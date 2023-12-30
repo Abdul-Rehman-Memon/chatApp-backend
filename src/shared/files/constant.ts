@@ -1,1 +1,1 @@
-export const roundPasswordLength = 10;
+export const minRoundPasswordLength = 10;

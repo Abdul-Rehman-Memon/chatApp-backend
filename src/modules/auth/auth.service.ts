@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ILogin, Isignup, authResponse } from './auth.dto';
 import * as bcrypt from 'bcrypt';
-import { roundPasswordLength } from 'src/shared/files/constant';
 import { ValidateService } from 'src/shared/services';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/models';
 import { Repository } from 'typeorm';
 import * as Exception from '@nestjs/common/exceptions';
 import { JwtService } from '@nestjs/jwt';
+import { minRoundPasswordLength } from 'src/shared/files/constant';
 
 @Injectable()
 export class AuthService {
-  roundPasswordLength = roundPasswordLength;
+  roundPasswordLength = minRoundPasswordLength;
 
   constructor(
     @InjectRepository(UsersEntity) private userRepo: Repository<UsersEntity>,
@@ -41,7 +41,10 @@ export class AuthService {
       }
     }
 
-    payload.password = await bcrypt.hash(payload.password, roundPasswordLength);
+    payload.password = await bcrypt.hash(
+      payload.password,
+      minRoundPasswordLength,
+    );
 
     const token = await this.createToken({
       email: payload.email,
@@ -99,5 +102,14 @@ export class AuthService {
   async createToken(payload: any) {
     const token = await this.jwtService.signAsync(payload);
     return token;
+  }
+
+  async isValidToken(userDetails: any) {
+    const user = await this.userRepo.findOne({
+      where: {
+        email: userDetails.email,
+      },
+    });
+    return user;
   }
 }

@@ -9,9 +9,10 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     TypeOrmModule.forFeature([UsersEntity]),
-    JwtModule.register({ secret: 'hard!to-guess_secret' }),
+    JwtModule.register({ secret: process.env.TOKEN_SECRET }),
   ],
   providers: [AuthService, ValidateService],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}
